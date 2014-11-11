@@ -1,5 +1,9 @@
 public class Euler2
 {
+	//find sum of even fibonacci number less then 4*10^6
+
+	//nothing fancy, literal compute fibnocci series
+	//if next term is even, add it to the sum
 	public static void main(String[] args)
 	{
 		int first = 1;
