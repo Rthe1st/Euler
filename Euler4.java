@@ -28,7 +28,7 @@ public class Euler4 {
             System.out.println("This program an integer as a parameter");
             return;
         } catch (ArrayIndexOutOfBoundsException arrayIndexOutOfBoundsException) {
-            System.out.println("This program one parameter");
+            System.out.println("This program takes one parameter");
             return;
         } catch (IllegalArgumentException illegalArgumentException) {
             System.out.println("This program expects a parameter >= 3");
@@ -77,35 +77,36 @@ public class Euler4 {
     }
 
     public static int[] decreasePalendrom(int[] palendromeDigits) {
+        if(palendromeDigits[0] == 0){
+            throw new IllegalArgumentException("first digit was 0");
+        }
+        int midPoint = (int) Math.floor(palendromeDigits.length / 2);
+        boolean isOdd = palendromeDigits.length % 2 == 1;
         if (palendromeDigits[0] == 1) {
             palendromeDigits = new int[palendromeDigits.length - 1];
-            for (int digit = 0; digit < palendromeDigits.length; digit++) {
-                palendromeDigits[digit] = 9;
-            }
-            return palendromeDigits;
-        }
-        boolean evenLength = palendromeDigits.length % 2 == 0;
-        int midPoint = (int) Math.floor(palendromeDigits.length / 2);
-        if (!evenLength) {
-            if (palendromeDigits[midPoint] != 0) {
-                palendromeDigits[midPoint] -= 1;
-                return palendromeDigits;
-            } else {
+            Arrays.fill(palendromeDigits, 9);
+        }else if (!isOdd && palendromeDigits[midPoint] == 0){
+            palendromeDigits[midPoint] -= 1;
+        }else {
+            //starting from the centre, going outward (left and right simultaneously)
+            //set all 0s to 9s
+            //as soon as you find a non-zero, decrease it and stop
+            if(isOdd) {
                 palendromeDigits[midPoint] = 9;
             }
-        }
-        for (int digit = midPoint - 1; digit >= 0; digit--) {
-            int mirrorDigit = palendromeDigits.length - 1 - digit;
-            if (palendromeDigits[digit] == 0) {
-                palendromeDigits[digit] = 9;
-                palendromeDigits[mirrorDigit] = 9;
-            } else {
-                palendromeDigits[digit] -= 1;
-                palendromeDigits[mirrorDigit] -= 1;
-                return palendromeDigits;
+            for (int digit = midPoint - 1; digit >= 0; digit--) {
+                int mirrorDigit = palendromeDigits.length - 1 - digit;
+                if (palendromeDigits[digit] == 0) {
+                    palendromeDigits[digit] = 9;
+                    palendromeDigits[mirrorDigit] = 9;
+                } else {
+                    palendromeDigits[digit] -= 1;
+                    palendromeDigits[mirrorDigit] -= 1;
+                    break;
+                }
             }
+            assert false;//should never reach here
         }
-        //should never reach here
         return palendromeDigits;
     }
 
@@ -117,7 +118,11 @@ public class Euler4 {
             System.out.println("Found valid factors, was sqrt " + startLowerFactor);
             return true;
         }
+        //from here factors will always be on opposite sides of the square root
         for (int lowerFactor = startLowerFactor; lowerFactor >= minFactor; lowerFactor--) {
+            //shortcut, as lowerFactor is in the outer loop
+            //test numbers only get smaller with each iteration
+            //if they're already too small, no point in continuing
             if (lowerFactor * maxFactor < number) {
                 System.out.println("None possible, lowerFactor (" + lowerFactor + ")*maxFactor(" + maxFactor + ") too low");
                 return false;
@@ -127,14 +132,18 @@ public class Euler4 {
                 if (result == number) {
                     System.out.println("Found valid factors, lower: " + lowerFactor + ", upper: " + upperFactor);
                     return true;
-                }
-                if (result > number) {
+                }else if (result > number) {
+                    //similar shortcut to outer loop, but checking for too large instead of too small
+                    //because lowerFactor will reduce results size in future iterations
+                    //only a break can be done (not a return)
                     System.out.println("breaking, lowerFactor (" + lowerFactor + ")*upperFactor(" + upperFactor + ") too high");
                     break;
                 }
             }
         }
-        //shouldnt get here 
+        //this only occurs is the palendrome is less then minFactor*maxFactor
+        //and has no valid factors, so none of the shortcuts apply
+        System.out.println("None possible, no short cuts taken");
         return false;
     }
 } 
