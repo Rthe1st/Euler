@@ -4,15 +4,15 @@ import java.util.Arrays;
 public class Euler4 {
     //Find the largest palindrome from the product of two 3 digit numbers
 
-    //done by treating palendromes as arrays of digits rather then numbers
-    //1 find highest palendrome (9..9779..9)
+    //done by treating palindromes as arrays of digits rather then numbers
+    //1 find highest palindrome (9..9779..9)
     //2 attempt to factorise
-    //      if valid factors, this will be your highest valid palendrome
+    //      if valid factors, this will be your highest valid palindrome
     //3 decrease the value of the left and right halves by the 1
     //      99977999, 89977998, so on
     //repeat 2 and 3
-    //if a palendrome with factor lengths below the specifed number of digits occurs
-    //then no valid palendrome exists
+    //if a palindrome with factor lengths below the specifed number of digits occurs
+    //then no valid palindrome exists
     public static void main(String[] args) {
         int numOfDigits;
         try {
@@ -47,67 +47,67 @@ public class Euler4 {
         int minResultLength = numOfDigits + (numOfDigits - 1);
         System.out.println("min digits: " + minResultLength);
         //doesnt work for 2 or less digits in factors
-        //highest palendrome will be 9..9779..9
-        int[] palendromeDigits = new int[maxResultLength];
-        Arrays.fill(palendromeDigits, 9);
-        palendromeDigits[(maxResultLength / 2) - 1] = 7;
-        palendromeDigits[maxResultLength / 2] = 7;
-        int testPalendrome = assemblePalendrome(palendromeDigits);
-        boolean nonePossible = Integer.toString(testPalendrome).length() < minResultLength;
-        System.out.println("First palendrome is: " + testPalendrome);
-        while (!hasValidFactor(testPalendrome, minFactor, maxFactor) && !nonePossible) {
-            palendromeDigits = decreasePalendrom(palendromeDigits);
-            testPalendrome = assemblePalendrome(palendromeDigits);
-            System.out.println("next palendrome is: " + testPalendrome);
-            nonePossible = Integer.toString(testPalendrome).length() < minResultLength;
+        //highest palindrome will be 9..9779..9
+        int[] palindromeDigits = new int[maxResultLength];
+        Arrays.fill(palindromeDigits, 9);
+        palindromeDigits[(maxResultLength / 2) - 1] = 7;
+        palindromeDigits[maxResultLength / 2] = 7;
+        int testPalindrome = assemblePalindrome(palindromeDigits);
+        boolean nonePossible = Integer.toString(testPalindrome).length() < minResultLength;
+        System.out.println("First palindrome is: " + testPalindrome);
+        while (!hasValidFactor(testPalindrome, minFactor, maxFactor) && !nonePossible) {
+            palindromeDigits = decreasePalindrome(palindromeDigits);
+            testPalindrome = assemblePalindrome(palindromeDigits);
+            System.out.println("next palindrome is: " + testPalindrome);
+            nonePossible = Integer.toString(testPalindrome).length() < minResultLength;
         }
         if (nonePossible) {
-            System.out.println("No valid palendromes found");
+            System.out.println("No valid palindromes found");
         } else {
-            System.out.println("Highest valid palendrome is " + testPalendrome);
+            System.out.println("Highest valid palindrome is " + testPalindrome);
         }
     }
 
-    public static int assemblePalendrome(int[] digits) {
-        int assembledPalendrome = 0;
+    public static int assemblePalindrome(int[] digits) {
+        int assembledPalindrome = 0;
         for (int digit = 0; digit < digits.length; digit += 1) {
-            assembledPalendrome += digits[digit] * (int) Math.pow(10, digit);
+            assembledPalindrome += digits[digit] * (int) Math.pow(10, digit);
         }
-        return assembledPalendrome;
+        return assembledPalindrome;
     }
 
-    public static int[] decreasePalendrom(int[] palendromeDigits) {
-        if(palendromeDigits[0] == 0){
+    public static int[] decreasePalindrome(int[] palindromeDigits) {
+        if(palindromeDigits[0] == 0){
             throw new IllegalArgumentException("first digit was 0");
         }
-        int midPoint = (int) Math.floor(palendromeDigits.length / 2);
-        boolean isOdd = palendromeDigits.length % 2 == 1;
-        if (palendromeDigits[0] == 1) {
-            palendromeDigits = new int[palendromeDigits.length - 1];
-            Arrays.fill(palendromeDigits, 9);
-        }else if (!isOdd && palendromeDigits[midPoint] == 0){
-            palendromeDigits[midPoint] -= 1;
+        int midPoint = (int) Math.floor(palindromeDigits.length / 2);
+        boolean isOdd = palindromeDigits.length % 2 == 1;
+        if (palindromeDigits[0] == 1) {
+            palindromeDigits = new int[palindromeDigits.length - 1];
+            Arrays.fill(palindromeDigits, 9);
+        }else if (!isOdd && palindromeDigits[midPoint] == 0){
+            palindromeDigits[midPoint] -= 1;
         }else {
             //starting from the centre, going outward (left and right simultaneously)
             //set all 0s to 9s
             //as soon as you find a non-zero, decrease it and stop
             if(isOdd) {
-                palendromeDigits[midPoint] = 9;
+                palindromeDigits[midPoint] = 9;
             }
             for (int digit = midPoint - 1; digit >= 0; digit--) {
-                int mirrorDigit = palendromeDigits.length - 1 - digit;
-                if (palendromeDigits[digit] == 0) {
-                    palendromeDigits[digit] = 9;
-                    palendromeDigits[mirrorDigit] = 9;
+                int mirrorDigit = palindromeDigits.length - 1 - digit;
+                if (palindromeDigits[digit] == 0) {
+                    palindromeDigits[digit] = 9;
+                    palindromeDigits[mirrorDigit] = 9;
                 } else {
-                    palendromeDigits[digit] -= 1;
-                    palendromeDigits[mirrorDigit] -= 1;
+                    palindromeDigits[digit] -= 1;
+                    palindromeDigits[mirrorDigit] -= 1;
                     break;
                 }
             }
             assert false;//should never reach here
         }
-        return palendromeDigits;
+        return palindromeDigits;
     }
 
     public static boolean hasValidFactor(int number, int minFactor, int maxFactor) {
@@ -141,7 +141,7 @@ public class Euler4 {
                 }
             }
         }
-        //this only occurs is the palendrome is less then minFactor*maxFactor
+        //this only occurs is the palindrome is less then minFactor*maxFactor
         //and has no valid factors, so none of the shortcuts apply
         System.out.println("None possible, no short cuts taken");
         return false;
