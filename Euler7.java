@@ -7,7 +7,7 @@ public class Euler7
 	 * Then reports Nth prime
 	 * Because no upper boundary for the nth primes is known,
 	 * a section of length sectionSize is sieved at a time
-	 * So 1 to x-1 is sieved, then x to (x*2)-1 is seived and so on
+	 * So 1 to x-1 is sieved, then x to (x*2)-1 is sieved and so on
 	 * 
 	 * Tested sections of 1000 vs sections of 1000000 (in which case only 1 section would be used)
 	 * They take the same time
@@ -18,9 +18,9 @@ public class Euler7
 	{
 		int loopNum = 0;
 		int sectionSize = 1000000;
-		Vector<Integer> primes = new Vector<Integer>();
+		Vector<Integer> primes = new Vector<>();
 		while(true){
-			System.out.println("primecount is "+primes.size());
+			System.out.println("prime count is "+primes.size());
 			boolean[] tests = new boolean[sectionSize];
 			int sectionMax = ((loopNum+1)*sectionSize)-1;
 			int sectionMin = loopNum*sectionSize;
@@ -36,7 +36,7 @@ public class Euler7
 				}
 				if(!tests[test%sectionSize]){
 					primes.add(test);
-					System.out.println("foundprime  "+test);
+					System.out.println("found prime  "+test);
 					if(primes.size() == 10001){
 						System.out.println("prime 10001 is "+test);
 						return;

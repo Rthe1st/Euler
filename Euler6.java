@@ -3,8 +3,8 @@ public class Euler6 {
 	 * Takes a single int argument, which is N, and computes
 	 * sum(1...N)^2-sum(1^2...N^2)
 	 * 
-	 * Uses formalue for summing 1...N
-	 * Doesnt use formulae for summing squares but only because
+	 * Uses formula for summing 1...N
+	 * Doesn't use formulae for summing squares but only because
 	 * I refused to google one and forgot how to math
 	 */
 
@@ -17,7 +17,7 @@ public class Euler6 {
 			throw e;
 		} catch (ArrayIndexOutOfBoundsException e) {
 			System.err
-					.println("Euler6 computes sum of squares vs sqaure of sums for 1-N, n must be supplied as an argument");
+					.println("Euler6 computes sum of squares vs square of sums for 1-N, n must be supplied as an argument");
 			throw e;
 		}
 		int sum1toN = (maxSquare * (maxSquare + 1)) / 2;
