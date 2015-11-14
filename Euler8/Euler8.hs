@@ -7,24 +7,16 @@ main = do
     args <- getArgs
     case args of
         [searchFile,needleLength,"maxima"] ->
-            runMaxima searchFile needleLength
-        [searchFile,needleLength,"naive"] ->
-            runNaive searchFile needleLength
+            doIO findLargestMaxima searchFile needleLength
         [searchFile,needleLength] ->
-            runNaive searchFile needleLength
+            doIO findLargestProductNaive searchFile needleLength
         _ -> putStrLn "Requires arguments: fileName needleLength [algorithm]\n where algorithm must be one of: naive, maxima. Defaults to naive"
 
-runMaxima :: String -> String -> IO()
-runMaxima searchFile needleLength = do
+doIO :: ([Int] -> Int -> Int) -> String -> String -> IO()
+doIO findingFunction searchFile needleLength = do
     contents <- readFile searchFile
-    let intList = map digitToInt contents
-    output (findLargestMaxima intList (read needleLength))
-
-runNaive :: String -> String -> IO()
-runNaive searchFile needleLength = do
-    contents <- readFile searchFile
-    let intList = map digitToInt contents
-    output (findMaxProductNaive intList (read needleLength) 0)
+    let digitList = map digitToInt contents
+    output (findingFunction digitList (read needleLength))
 
 output :: Int -> IO()
 output maxProduct = do
@@ -35,11 +27,12 @@ output maxProduct = do
 Basic algorithm, literally move through the list, evaluating the product of the first n elements
 If that product is larger then the previous largest, remember it.
 -}
-findMaxProductNaive :: [Int] -> Int -> Int -> Int
-findMaxProductNaive hayStack needleLength maxProduct
-	| length hayStack < needleLength = maxProduct
-	| otherwise = findMaxProductNaive (tail hayStack) needleLength (max currentProduct maxProduct)
-	where currentProduct = product (take needleLength hayStack)
+findLargestProductNaive :: [Int] -> Int -> Int
+findLargestProductNaive hayStack needleLength
+    | length hayStack == needleLength - 1 = 0
+    | otherwise = max currentProduct recursiveProduct
+    where currentProduct = product (take needleLength hayStack)
+          recursiveProduct = findLargestProductNaive (tail hayStack) needleLength
 
 {-
 More complex
@@ -63,19 +56,21 @@ verses n multiply operations in the naive method
 findLargestMaxima :: [Int] -> Int -> Int
 findLargestMaxima digitList needleLength = case digitList of
 	[] -> 0
-	_ -> max maxima (findLargestMaxima afterMaxima needleLength)
-	where remaingDigitList = findFirstMaximaPosition (findFirstMinimaPosition digitList needleLength) needleLength
-   	      afterMaxima = drop needleLength remaingDigitList
+	_ -> max maxima (findLargestMaxima (findFirstMinimaPosition afterMaxima needleLength) needleLength)
+	where remaingDigitList = findFirstMaximaPosition digitList needleLength
+   	      afterMaxima = drop 2 remaingDigitList
    	      maxima = product (take needleLength remaingDigitList)
 
 findFirstMinimaPosition :: [Int] -> Int -> [Int]
 findFirstMinimaPosition digitList needleLength
-	| length digitList == needleLength+1 = digitList
+    | length digitList < needleLength = []
+	| length digitList == needleLength = digitList
 	| head digitList < digitList!!needleLength = digitList
 	| head digitList >= digitList!!needleLength = findFirstMinimaPosition (tail digitList) needleLength
 
 findFirstMaximaPosition :: [Int] -> Int -> [Int]
 findFirstMaximaPosition digitList needleLength
-	| length digitList == needleLength+1 = tail digitList
+    | length digitList < needleLength = []
+	| length digitList == needleLength = digitList
 	| head digitList > digitList!!needleLength = digitList
 	| head digitList <= digitList!!needleLength = findFirstMaximaPosition (tail digitList) needleLength
