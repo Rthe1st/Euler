@@ -7,3 +7,11 @@
 *.iws
 .idea/
 out/
+
+# Haskell ignores
+*/dist
+.cabal-sandbox
+cabal.sandbox.config
+*.o
+*.hi
+*.exe
