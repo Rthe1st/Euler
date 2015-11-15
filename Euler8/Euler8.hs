@@ -51,6 +51,9 @@ Eventually all local maximas will be found, at which point the largest can be se
 Haven't profiled, but should (maybe...) be faster then naive method because for each digit advanced in the search string
 only one > or < comparison is being done,
 verses n multiply operations in the naive method
+
+Have now profiled, its if anything slower.
+At a guess it's because theres more case statements to evaluate?
 -}
 
 findLargestMaxima :: [Int] -> Int -> Int
