@@ -1,0 +1,18 @@
+A n digit number added 10 times will have n+1 digits
+(Becauing thats what timesing by 10 does)
+Thus, adding 100=10*10 n digit numbers, gives us a n+2 digit number
+
+Simple solution:
+Start from small end, add each digit in column
+This number will have 3 digits at most (4 if previous carry happened)
+Carry the first 2(/3) into columns to the left
+Repeat
+
+Prematurly optimisaed solution:
+Start from large end.
+Add digits in each column, record sum
+Move to the right and add, carrying any excess digits back to the right
+Re-sum previous 3 columns to account for carrying
+If carrying doesnt have a knock on effect (i.e. trigger carrying even further to the left)
+for 3 columns in a row, you can early exit
+As no column can effect a column more then 3 rows to the left of it.
